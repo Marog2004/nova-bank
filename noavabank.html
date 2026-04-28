@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NovaBank | Your Digital Vault</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-950 text-white min-h-screen" x-data="{ 
+    view: 'landing', 
+    isRegistering: false,
+    balance: 0,
+    userName: '',
+    email: '',
+    transactions: [],
+    
+    login() {
+        this.balance = 1000; // Default balance for demo
+        this.userName = this.userName || 'Member';
+        this.view = 'dashboard';
+        if(this.isRegistering) {
+            this.transactions.push({type: 'Bonus', amount: 1000, date: 'Now'});
+        }
+    }
+}">
+
+    <template x-if="view === 'landing'">
+        <div class="h-screen flex flex-col items-center justify-center p-6 text-center">
+            <div class="w-20 h-20 bg-blue-600 rounded-3xl flex items-center justify-center mb-6 shadow-2xl shadow-blue-500/20">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                </svg>
+            </div>
+            <h1 class="text-6xl font-extrabold mb-4 italic tracking-tighter">NovaBank</h1>
+            <p class="text-slate-400 max-w-sm mb-10 text-lg">The future of banking is here. Secure, instant, and borderless.</p>
+            <div class="flex flex-col w-full max-w-xs gap-4">
+                <button @click="view = 'auth'; isRegistering = true" class="bg-white text-black py-4 rounded-2xl font-bold text-lg hover:bg-slate-200 transition">Open Free Account</button>
+                <button @click="view = 'auth'; isRegistering = false" class="bg-slate-800 text-white py-4 rounded-2xl font-bold text-lg hover:bg-slate-700 transition">Sign In</button>
+            </div>
+        </div>
+    </template>
+
+    <template x-if="view === 'auth'">
+        <div class="min-h-screen flex items-center justify-center p-6">
+            <div class="w-full max-w-md bg-slate-900 rounded-[2.5rem] p-8 border border-slate-800 shadow-2xl">
+                <h2 class="text-3xl font-bold mb-2" x-text="isRegistering ? 'Create Account' : 'Welcome Back'"></h2>
+                <p class="text-slate-500 mb-8" x-text="isRegistering ? 'Sign up and get a $1,000 bonus' : 'Access your digital vault'"></p>
+                
+                <form @submit.prevent="login()" class="space-y-4">
+                    <template x-if="isRegistering">
+                        <input type="text" x-model="userName" placeholder="Full Name" class="w-full p-4 bg-slate-800 rounded-2xl border-none focus:ring-2 focus:ring-blue-500 outline-none" required>
+                    </template>
+                    <input type="email" x-model="email" placeholder="Email Address" class="w-full p-4 bg-slate-800 rounded-2xl border-none focus:ring-2 focus:ring-blue-500 outline-none" required>
+                    <input type="password" placeholder="Password" class="w-full p-4 bg-slate-800 rounded-2xl border-none focus:ring-2 focus:ring-blue-500 outline-none" required>
+                    
+                    <button class="w-full bg-blue-600 py-4 rounded-2xl font-bold text-lg mt-4 shadow-lg shadow-blue-900/40" x-text="isRegistering ? 'Register & Claim $1000' : 'Secure Login'"></button>
+                </form>
+                
+                <button @click="isRegistering = !isRegistering" class="w-full mt-6 text-slate-500 text-sm font-semibold" x-text="isRegistering ? 'Already a member? Sign in' : 'New here? Create an account'"></button>
+            </div>
+        </div>
+    </template>
+
+    <template x-if="view === 'dashboard'">
+        <div class="max-w-md mx-auto p-6 pt-10">
+            <div class="flex justify-between items-center mb-8">
+                <span class="text-2xl font-black italic text-blue-500 tracking-tighter">NovaBank</span>
+                <button @click="view = 'landing'" class="text-slate-500 hover:text-red-500 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="bg-gradient-to-br from-blue-600 to-indigo-800 p-8 rounded-[2.5rem] mb-8 shadow-xl relative overflow-hidden">
+                <p class="text-blue-200 text-xs font-bold uppercase tracking-widest mb-2">Total Balance</p>
+                <h2 class="text-5xl font-black" x-text="'$' + balance.toLocaleString()"></h2>
+                <div class="mt-8 flex justify-between items-end">
+                    <span class="text-sm font-bold opacity-80" x-text="userName"></span>
+                    <span class="bg-white/20 px-3 py-1 rounded-full text-[10px] font-black uppercase">Active</span>
+                </div>
+                <div class="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full"></div>
+            </div>
+
+            <div class="bg-slate-900 rounded-[2.5rem] p-8 border border-slate-800">
+                <h3 class="font-bold text-xl mb-6">Send Money</h3>
+                <div class="space-y-4" x-data="{ sendAmt: '', sendTo: '' }">
+                    <input type="email" x-model="sendTo" placeholder="Recipient Email" class="w-full p-4 bg-slate-800 rounded-2xl border-none outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="number" x-model="sendAmt" placeholder="Amount" class="w-full p-4 bg-slate-800 rounded-2xl border-none outline-none focus:ring-2 focus:ring-blue-500">
+                    <button @click="if(sendAmt > 0 && sendAmt <= balance) { balance -= sendAmt; transactions.unshift({type: 'Sent', amount: sendAmt, date: 'Today'}); sendAmt = ''; sendTo = ''; alert('Sent!'); } else { alert('Error!'); }" class="w-full bg-blue-600 py-4 rounded-2xl font-bold">Transfer Now</button>
+                </div>
+            </div>
+
+            <div class="mt-8">
+                <h3 class="font-bold text-slate-500 uppercase text-xs tracking-widest mb-4">Recent Activity</h3>
+                <div class="space-y-4">
+                    <template x-for="tx in transactions">
+                        <div class="flex justify-between items-center bg-slate-900/50 p-4 rounded-2xl border border-slate-800">
+                            <div>
+                                <p class="font-bold text-sm" x-text="tx.type"></p>
+                                <p class="text-[10px] text-slate-500 font-bold" x-text="tx.date"></p>
+                            </div>
+                            <p class="font-black" :class="tx.type === 'Bonus' ? 'text-green-500' : 'text-white'" x-text="(tx.type === 'Bonus' ? '+' : '-') + '$' + tx.amount"></p>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </template>
+
+</body>
+</html>
